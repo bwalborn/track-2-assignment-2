@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "name": "vandy.cs5278.CharArrayTest",
+      "setup": "",
+      "run": "gradle test",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": null
+    }
+  ]
+}
