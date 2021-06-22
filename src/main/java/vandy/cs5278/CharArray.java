@@ -3,6 +3,8 @@ package vandy.cs5278;
 
 import java.lang.ArrayIndexOutOfBoundsException;
 import java.util.Iterator;
+import java.util.stream.Stream;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -16,16 +18,24 @@ public class CharArray implements Comparable<CharArray>,
      * The underlying array.
      */
     // TODO - you fill in here
+    private char[] CharArray; 
+    // private ArrayList CharArray;
 
     /**
      * The current size of the array.
      */
     // TODO - you fill in here
+    private int size;
 
     /**
      * Default value for elements in the array.
      */
     // TODO - you fill in here
+    private char value;
+
+    // private CharArray deepCopy;
+
+
 
     /**
      * Constructs an array of the given size.
@@ -36,6 +46,9 @@ public class CharArray implements Comparable<CharArray>,
      */
     public CharArray(int size) {
         // TODO - you fill in here
+        // this.size = size;
+        this.CharArray = new char[size];
+        this.size = size;
     }
 
     /**
@@ -49,6 +62,11 @@ public class CharArray implements Comparable<CharArray>,
      */
     public CharArray(int size, char defaultvalue) {
         // TODO - you fill in here
+        // this.value = defaultvalue;
+        // this.size = size;
+        this.CharArray = new char[size];
+        this.value = defaultvalue;
+        Arrays.fill(this.CharArray, defaultvalue);
     }
 
     /**
@@ -58,16 +76,25 @@ public class CharArray implements Comparable<CharArray>,
      */
     public CharArray(CharArray s) {
         // TODO - you fill in here
+        // this.CharArray = s.CharArray;  // shallow copy
+
+        this.CharArray = new char[s.size];  // deep copy
+        for (int i = 0; i < s.size; i++) {
+            this.CharArray[i] = s.CharArray[i];
+        }
     }
 
     /**
      * Creates a deep copy of this CharArray.  Implements the
      * Prototype pattern.
+     * @throws CloneNotSupportedException
      */
     @Override
-    public Object clone() {
+    public Object clone() throws CloneNotSupportedException {
         // TODO - you fill in here (replace return null with right implementation).
-        return null;
+
+        return super.clone();
+        // return null;
     }
 
     /**
@@ -75,7 +102,8 @@ public class CharArray implements Comparable<CharArray>,
      */
     public int size() {
         // TODO - you fill in here (replace return 0 with right implementation).
-        return 0;
+        // return 0;
+        return size;
     }
 
     /**
@@ -83,7 +111,8 @@ public class CharArray implements Comparable<CharArray>,
      */
     public int capacity() {
         // TODO - you fill in here (replace return 0 with right implementation).
-        return 0;
+        return CharArray.length;
+        // return 0;
     }
 
     /**
@@ -102,6 +131,50 @@ public class CharArray implements Comparable<CharArray>,
      */
     public void resize(int size) {
         // TODO - you fill in here
+        if(size > this.size){
+            // char[] temp = new char[size];
+            int diff = size - this.size;
+            char[] tempArray = new char[diff];
+
+            Arrays.fill(tempArray, value);
+            
+
+            
+            char[] result = new char[size];
+            // Arrays.fill(temp, defaultvalue);
+            // this.CharArray = new char[size];
+
+            System.arraycopy(this.CharArray, 0, result, 0, this.size);
+            System.arraycopy(tempArray, 0, result, this.size, size);
+
+
+            this.CharArray = result;
+
+            // char[] temp = Arrays.copyOf(this.CharArray, size);
+            // this.CharArray = Stream.concat(Arrays.stream(temp2), Arrays.stream(temp)).toArray(char[]::new);
+
+
+
+            this.size = size;
+        }
+        if(size < this.size){
+
+            int diff = this.size - size;
+
+            char[] tempArray = new char[diff];
+
+            Arrays.fill(tempArray, value);
+            
+            char[] result = new char[size];
+  
+            System.arraycopy(this.CharArray, 0, result, 0, this.size);
+            System.arraycopy(tempArray, 0, result, this.size, size);
+
+
+            this.CharArray = result;
+
+            this.size = size;
+        }
     }
 
     /**
@@ -111,8 +184,12 @@ public class CharArray implements Comparable<CharArray>,
      *                                        current bounds of the array.
      */
     public char get(int index) {
-        // TODO - you fill in here (replace return '\0' with right implementation).
-        return '\0';
+        try {
+            return CharArray[index];
+        } catch (Exception e) {
+            throw e;
+        }
+        // return '\0';
     }
 
     /**
@@ -124,8 +201,21 @@ public class CharArray implements Comparable<CharArray>,
      *                                        current bounds of the array.
      */
     public void set(int index, char value) {
-        // TODO - you fill in here
+        this.CharArray[index] = value;
     }
+
+
+  
+    public String tString() {
+        StringBuilder str = new StringBuilder();
+        for(char c: this.CharArray)
+            str.append(c);
+        
+        return str.toString();
+    }
+
+
+
 
     /**
      * Compares this array with another array.
@@ -141,7 +231,55 @@ public class CharArray implements Comparable<CharArray>,
     @Override
     public int compareTo(CharArray s) {
         // TODO - you fill in here (replace return 0 with right implementation).
-        return 0;
+        // String str = new String(this.CharArray);
+        // String str2 = new String(s);
+        // str str2 = new StringBuilder();
+        // String v = s.toString();
+
+        // if(s.size > size()) return -1;
+
+        // for(int i = 0; i<this.CharArray.length; i++){
+        //     str2.append(s.get(i));
+        // }
+
+        // str2.toString();
+        int compare = this.tString().compareTo(s.tString());
+
+        // if(compare == 0) return 0;
+        if(compare < 0){
+            return -1;
+        } 
+        else if(compare > 0){
+            return 1;
+        } else {
+            return 0;
+        }
+
+
+
+        // return 0;
+
+        // if(Arrays.deepEquals(s, this)){
+        //     return 0;
+        // }
+
+        // if(s.size < this.CharArray.length){
+        //     return 1;
+        // }
+        // // if (s.CharArray.length > this.CharArray.length){
+        // if (s.size > this.CharArray.length){
+        //     return -1;
+        // }
+        // return 100;
+        // else {
+        //     for(int i = 0; i<this.CharArray.length; i++){
+        //         if(Character.compare(s.CharArray[i], this.CharArray[i]) != 0){
+
+        //         }
+        //     }
+        // }
+        // return 0;
+        // return size;
     }
 
     /**
