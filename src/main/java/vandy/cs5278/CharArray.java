@@ -2,7 +2,10 @@
 package vandy.cs5278;
 
 import java.lang.ArrayIndexOutOfBoundsException;
+// import java.lang.reflect.Array;
 import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,8 +36,7 @@ public class CharArray implements Comparable<CharArray>,
     // TODO - you fill in here
     private char value;
 
-    // private CharArray deepCopy;
-
+    private int capacity;
 
 
     /**
@@ -45,11 +47,11 @@ public class CharArray implements Comparable<CharArray>,
      *                                    negative.
      */
     public CharArray(int size) {
-        // TODO - you fill in here
-        // this.size = size;
         this.CharArray = new char[size];
         this.size = size;
+        this.capacity = size;
     }
+
 
     /**
      * Constructs an array of the given size, filled with the provided
@@ -61,13 +63,14 @@ public class CharArray implements Comparable<CharArray>,
      *                                    negative.
      */
     public CharArray(int size, char defaultvalue) {
-        // TODO - you fill in here
-        // this.value = defaultvalue;
-        // this.size = size;
         this.CharArray = new char[size];
         this.value = defaultvalue;
         Arrays.fill(this.CharArray, defaultvalue);
+        this.size = size;
+        this.capacity = size;
     }
+
+
 
     /**
      * Copy constructor; creates a deep copy of the provided CharArray.
@@ -75,13 +78,14 @@ public class CharArray implements Comparable<CharArray>,
      * @param s The CharArray to be copied.
      */
     public CharArray(CharArray s) {
-        // TODO - you fill in here
-        // this.CharArray = s.CharArray;  // shallow copy
 
         this.CharArray = new char[s.size];  // deep copy
         for (int i = 0; i < s.size; i++) {
             this.CharArray[i] = s.CharArray[i];
         }
+        this.size = s.size;
+        this.capacity = s.size;
+        this.value = s.value;
     }
 
     /**
@@ -90,29 +94,29 @@ public class CharArray implements Comparable<CharArray>,
      * @throws CloneNotSupportedException
      */
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        // TODO - you fill in here (replace return null with right implementation).
-
-        return super.clone();
-        // return null;
+    public Object clone() {
+        try {
+            CharArray t = (CharArray)super.clone();
+            t.capacity = 0;
+            return t;
+        } catch (CloneNotSupportedException e) {
+            // TODO Auto-generated catch block
+            return e;
+        }
     }
 
     /**
      * @return The current size of the array.
      */
     public int size() {
-        // TODO - you fill in here (replace return 0 with right implementation).
-        // return 0;
-        return size;
+        return this.size;
     }
 
     /**
      * @return The current maximum capacity of the array.
      */
     public int capacity() {
-        // TODO - you fill in here (replace return 0 with right implementation).
-        return CharArray.length;
-        // return 0;
+        return this.capacity;
     }
 
     /**
@@ -130,51 +134,18 @@ public class CharArray implements Comparable<CharArray>,
      * @param size Nonnegative requested new size.
      */
     public void resize(int size) {
-        // TODO - you fill in here
         if(size > this.size){
-            // char[] temp = new char[size];
-            int diff = size - this.size;
-            char[] tempArray = new char[diff];
+            char[] newArray = Arrays.copyOf(this.CharArray, size);
 
-            Arrays.fill(tempArray, value);
-            
+            for(int i = this.CharArray.length; i<size; i++)
+                newArray[i] = value;
 
-            
-            char[] result = new char[size];
-            // Arrays.fill(temp, defaultvalue);
-            // this.CharArray = new char[size];
+            this.CharArray = newArray;
 
-            System.arraycopy(this.CharArray, 0, result, 0, this.size);
-            System.arraycopy(tempArray, 0, result, this.size, size);
-
-
-            this.CharArray = result;
-
-            // char[] temp = Arrays.copyOf(this.CharArray, size);
-            // this.CharArray = Stream.concat(Arrays.stream(temp2), Arrays.stream(temp)).toArray(char[]::new);
-
-
-
-            this.size = size;
+        } else {
+            this.CharArray = Arrays.copyOf(this.CharArray, size);
         }
-        if(size < this.size){
-
-            int diff = this.size - size;
-
-            char[] tempArray = new char[diff];
-
-            Arrays.fill(tempArray, value);
-            
-            char[] result = new char[size];
-  
-            System.arraycopy(this.CharArray, 0, result, 0, this.size);
-            System.arraycopy(tempArray, 0, result, this.size, size);
-
-
-            this.CharArray = result;
-
-            this.size = size;
-        }
+        this.size = size;
     }
 
     /**
@@ -184,12 +155,11 @@ public class CharArray implements Comparable<CharArray>,
      *                                        current bounds of the array.
      */
     public char get(int index) {
-        try {
-            return CharArray[index];
-        } catch (Exception e) {
-            throw e;
+        if(index > this.CharArray.length){
+            throw new ArrayIndexOutOfBoundsException();
+        } else {
+            return this.CharArray[index];
         }
-        // return '\0';
     }
 
     /**
@@ -230,21 +200,8 @@ public class CharArray implements Comparable<CharArray>,
      */
     @Override
     public int compareTo(CharArray s) {
-        // TODO - you fill in here (replace return 0 with right implementation).
-        // String str = new String(this.CharArray);
-        // String str2 = new String(s);
-        // str str2 = new StringBuilder();
-        // String v = s.toString();
-
-        // if(s.size > size()) return -1;
-
-        // for(int i = 0; i<this.CharArray.length; i++){
-        //     str2.append(s.get(i));
-        // }
-
-        // str2.toString();
+//----------------------------------------------------------
         int compare = this.tString().compareTo(s.tString());
-
         // if(compare == 0) return 0;
         if(compare < 0){
             return -1;
@@ -254,32 +211,24 @@ public class CharArray implements Comparable<CharArray>,
         } else {
             return 0;
         }
+//----------------------------------------------------------
 
 
 
-        // return 0;
 
-        // if(Arrays.deepEquals(s, this)){
-        //     return 0;
+
+    // if(this.tString().equals(s.tString())){
+        //     return this.CharArray.length - s.CharArray.length;
         // }
+        // // return this.tString().compareTo(s.tString());
+        // return Integer.compare(this.size, s.size);
+    
+//----------------------------------------------------------
 
-        // if(s.size < this.CharArray.length){
-        //     return 1;
-        // }
-        // // if (s.CharArray.length > this.CharArray.length){
-        // if (s.size > this.CharArray.length){
-        //     return -1;
-        // }
-        // return 100;
-        // else {
-        //     for(int i = 0; i<this.CharArray.length; i++){
-        //         if(Character.compare(s.CharArray[i], this.CharArray[i]) != 0){
+        // int compare = Integer.compare(this.size, s.size);
+        // if(this.size.equals())
+        // return Integer.compare(this.size, s.size);
 
-        //         }
-        //     }
-        // }
-        // return 0;
-        // return size;
     }
 
     /**
@@ -289,19 +238,24 @@ public class CharArray implements Comparable<CharArray>,
      *                                        is outside the current bounds of the array.
      */
     private void rangeCheck(int index) {
-        // TODO - you fill in here
+
+        int min = 0;
+        int max = this.size;
+
+        if(!(index > min && index < max)){
+            throw new ArrayIndexOutOfBoundsException();
+        }
     }
 
     /**
      * Define an Iterator over the CharArray.
      */
-    public class CharArrayIterator
-            implements java.util.Iterator<Character> {
+    public class CharArrayIterator implements java.util.Iterator<Character> {
         /**
          * Keeps track of how far along the iterator has progressed.
          */
-        // TODO - you fill in here
-        int foo;
+ 
+        private int currentIndex = 0;
 
         /**
          * @return true if there are any remaining elements that
@@ -309,7 +263,8 @@ public class CharArray implements Comparable<CharArray>,
          */
         @Override
         public boolean hasNext() {
-            // TODO - you fill in here (replace return false with right implementation)
+            if(currentIndex < CharArray.this.CharArray.length) return true;
+
             return false;
         }
 
@@ -318,8 +273,11 @@ public class CharArray implements Comparable<CharArray>,
          */
         @Override
         public Character next() {
-            // TODO - you fill in here (replace return '\0' with right implementation)
-            return '\0';
+            if(!hasNext()){
+                throw new ArrayIndexOutOfBoundsException();
+            } 
+            // rangeCheck(currentIndex);
+            return CharArray[currentIndex++];
         }
     }
 
@@ -327,7 +285,6 @@ public class CharArray implements Comparable<CharArray>,
      * Factory method that returns an Iterator.
      */
     public Iterator<Character> iterator() {
-        // TODO - you fill in here (replace return null with right implementation)
-        return null;
+        return new CharArrayIterator();
     }
 }
