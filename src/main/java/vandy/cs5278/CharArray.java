@@ -2,12 +2,7 @@
 package vandy.cs5278;
 
 import java.lang.ArrayIndexOutOfBoundsException;
-// import java.lang.reflect.Array;
 import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Stream;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -17,25 +12,10 @@ import java.util.Arrays;
 public class CharArray implements Comparable<CharArray>,
         Iterable<Character>,
         Cloneable {
-    /**
-     * The underlying array.
-     */
-    // TODO - you fill in here
+
     private char[] CharArray; 
-    // private ArrayList CharArray;
-
-    /**
-     * The current size of the array.
-     */
-    // TODO - you fill in here
     private int size;
-
-    /**
-     * Default value for elements in the array.
-     */
-    // TODO - you fill in here
     private char value;
-
     private int capacity;
 
 
@@ -69,7 +49,6 @@ public class CharArray implements Comparable<CharArray>,
         this.size = size;
         this.capacity = size;
     }
-
 
 
     /**
@@ -200,35 +179,10 @@ public class CharArray implements Comparable<CharArray>,
      */
     @Override
     public int compareTo(CharArray s) {
-//----------------------------------------------------------
         int compare = this.tString().compareTo(s.tString());
-        // if(compare == 0) return 0;
-        if(compare < 0){
-            return -1;
-        } 
-        else if(compare > 0){
-            return 1;
-        } else {
-            return 0;
-        }
-//----------------------------------------------------------
-
-
-
-
-
-    // if(this.tString().equals(s.tString())){
-        //     return this.CharArray.length - s.CharArray.length;
-        // }
-        // // return this.tString().compareTo(s.tString());
-        // return Integer.compare(this.size, s.size);
-    
-//----------------------------------------------------------
-
-        // int compare = Integer.compare(this.size, s.size);
-        // if(this.size.equals())
-        // return Integer.compare(this.size, s.size);
-
+        if(compare < 0) return -1;
+        else if(compare > 0) return 1;
+        else return 0;
     }
 
     /**
@@ -247,9 +201,7 @@ public class CharArray implements Comparable<CharArray>,
         }
     }
 
-    /**
-     * Define an Iterator over the CharArray.
-     */
+
     public class CharArrayIterator implements java.util.Iterator<Character> {
         /**
          * Keeps track of how far along the iterator has progressed.
@@ -276,14 +228,11 @@ public class CharArray implements Comparable<CharArray>,
             if(!hasNext()){
                 throw new ArrayIndexOutOfBoundsException();
             } 
-            // rangeCheck(currentIndex);
             return CharArray[currentIndex++];
         }
     }
 
-    /**
-     * Factory method that returns an Iterator.
-     */
+
     public Iterator<Character> iterator() {
         return new CharArrayIterator();
     }
